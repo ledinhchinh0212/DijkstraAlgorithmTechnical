@@ -1,0 +1,2 @@
+# DijkstraFindMethod
+ just a application
