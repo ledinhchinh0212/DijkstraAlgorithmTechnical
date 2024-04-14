@@ -6,7 +6,7 @@ public class DijkstraAlgorithmMethod {
 	private int N, M;
 	private boolean charInHead;
 	private final int MAXN = 1001;
-	private int arr[][];
+	public int arr[][];
 	public int parent[];
 	public int dist[];
 	public Boolean sptSet[];

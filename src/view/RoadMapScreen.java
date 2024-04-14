@@ -1,6 +1,4 @@
 package view;
-
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -8,18 +6,20 @@ import javax.swing.border.EmptyBorder;
 import model.algorithm.DijkstraAlgorithmMethod;
 import model.roadmap.RoadMap;
 
-import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class RoadMapScreen extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private MainScreen main; // check
+	//private MainScreen main; // check
 	private JLabel targetLabelScreen;
 	private DijkstraAlgorithmMethod dijkstra;
 	private int start;
@@ -31,13 +31,13 @@ public class RoadMapScreen extends JFrame {
 		this.dijkstra = dijkstra;
 		this.start = start;
 		this.roadmap = roadmap;
-		this.main = main;
+		//this.main = main;
 		this.cHead = cHead;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RoadMapScreen.class.getResource("/Image/website-builder.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
-		setBounds(50, 100, 508, 467);
+		setBounds(50, 100, 462, 467);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -45,7 +45,7 @@ public class RoadMapScreen extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel sourceLabel = new JLabel("Source: ");
-		sourceLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		sourceLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		sourceLabel.setBounds(10, 11, 64, 39);
 		contentPane.add(sourceLabel);
 		
@@ -55,9 +55,11 @@ public class RoadMapScreen extends JFrame {
 		contentPane.add(sourceLabelScreen);
 		
 		targetLabelScreen = new JLabel("");
-		targetLabelScreen.setHorizontalAlignment(SwingConstants.LEFT);
-		targetLabelScreen.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		targetLabelScreen.setBounds(10, 46, 414, 371);
+		targetLabelScreen.setBackground(new Color(255, 255, 255));
+		targetLabelScreen.setHorizontalAlignment(SwingConstants.CENTER);
+		targetLabelScreen.setFont(new Font("Tahoma", Font.BOLD, 16));
+		targetLabelScreen.setBounds(10, 46, 426, 371);
+		targetLabelScreen.setOpaque(true);
 		contentPane.add(targetLabelScreen);
 		setVisible(true);
 		printSource();
@@ -92,8 +94,11 @@ public class RoadMapScreen extends JFrame {
 		}
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		int t = i;
+		System.out.println(i + " " + this.roadmap.getN());
+		System.out.println(this.roadmap.getTarget());
 		if(this.dijkstra.dist[i] == Integer.MAX_VALUE ||
 			i > this.roadmap.getN() || this.roadmap.getTarget() > this.roadmap.getN()) {
+			
 			System.out.println("Lon hon");
 			labelText.append("(Không có đường đi)");
 			labelText.append("<br>");
@@ -117,9 +122,10 @@ public class RoadMapScreen extends JFrame {
 				}
 				else {
 					labelText.append(list.get(j) + " ");
+					System.out.println(this.dijkstra.dist[list.get(j)]);
 				}
 			}
-			labelText.append("(Chí phí " + this.dijkstra.dist[i] + ")");
+			labelText.append("(Chi phí " + this.dijkstra.dist[i] + ")");
 			labelText.append("<br>");
 			labelText.append("<pre></html>");
 		}
@@ -172,7 +178,7 @@ public class RoadMapScreen extends JFrame {
 						labelText.append(list.get(j) + " ");
 					}
 				}
-				labelText.append("(Chí phí " + this.dijkstra.dist[i] + ")");
+				labelText.append("(Chi phí " + this.dijkstra.dist[i] + ")");
 				labelText.append("<br>");
 			}
 			labelText.append("<pre></html>");
@@ -221,7 +227,7 @@ public class RoadMapScreen extends JFrame {
 						labelText.append(list.get(j) + " ");
 					}
 				}
-				labelText.append("(Chí phí " + this.dijkstra.dist[i] + ")");
+				labelText.append("(Chi phí " + this.dijkstra.dist[i] + ")");
 				labelText.append("<br>");
 			}
 			labelText.append("<pre></html>");

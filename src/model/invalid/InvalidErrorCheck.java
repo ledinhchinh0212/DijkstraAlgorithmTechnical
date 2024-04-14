@@ -25,7 +25,10 @@ public class InvalidErrorCheck {
 	}
 	
 	public boolean CheckError(String data, int graph[][], boolean check, DijkstraAlgorithmMethod dijkstra) {
-		 String[] lines = data.split("\n");
+		if(data.isEmpty()) {
+			return false;
+		}
+		String[] lines = data.split("\n");
 		 for (String line : lines) {
 			 String[] values = line.trim().split("\\s+");
 			 if(values.length <= 2) {
@@ -135,5 +138,11 @@ public class InvalidErrorCheck {
 	 public boolean CaseHead(String s) {
 			return InvalidErrorCheck.getInstance().isAllUpperCase(s) && s.length() == 1;
 	}
+	 
+	 public boolean InvalidSourceAndTarget(String source, String target) {
+		 return isAllDigits(source) && isAllDigits(target);
+	 }
+	 
+	 
 
 }

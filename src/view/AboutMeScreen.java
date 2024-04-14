@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class AboutMeScreen extends JFrame {
 
@@ -33,6 +34,7 @@ public class AboutMeScreen extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutMeScreen.class.getResource("/Image/website-builder.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(95, 100, 368, 200);
 		this.setTitle("About me");
 		this.setResizable(false);
@@ -52,11 +54,14 @@ public class AboutMeScreen extends JFrame {
 		faceScreenInformation.setBounds(0, 0, 77, 69);
 		panel.add(faceScreenInformation);
 		
-		JLabel lblNewLabel = new JLabel("Lê Đình Chinh");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel.setBounds(75, 0, 257, 69);
-		panel.add(lblNewLabel);
+		JLabel labelMeScreen = new JLabel("Lê Đình Chinh");
+		labelMeScreen.setBackground(new Color(255, 255, 255));
+		labelMeScreen.setHorizontalAlignment(SwingConstants.CENTER);
+		labelMeScreen.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		labelMeScreen.setBounds(75, 0, 257, 69);
+		labelMeScreen.setBackground(Color.WHITE);
+		labelMeScreen.setOpaque(true);
+		panel.add(labelMeScreen);
 		
 		JLabel myGitHudLabel = new JLabel("My GitHub:");
 		myGitHudLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -81,5 +86,29 @@ public class AboutMeScreen extends JFrame {
             }
         });
 		contentPane.add(linkGitHub);
+		
+		JLabel YoutbeLabel = new JLabel("Youtube:");
+		YoutbeLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		YoutbeLabel.setBounds(10, 119, 83, 42);
+		contentPane.add(YoutbeLabel);
+		
+		JLabel linkYoutube = new JLabel("<html><a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>chinh.dev.se</a></html>");
+		linkYoutube.setHorizontalAlignment(SwingConstants.LEFT);
+		linkYoutube.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		linkYoutube.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		linkYoutube.setBounds(103, 129, 246, 21);
+		linkYoutube.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(new java.net.URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+		contentPane.add(linkYoutube);
 	}
 }
