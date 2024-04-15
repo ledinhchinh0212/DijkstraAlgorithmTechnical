@@ -57,6 +57,7 @@ public class Data {
 	public void setInputMatrix(String inputMatrix) {
 		this.inputMatrix = inputMatrix;
 	}
+	
 
 	
 	

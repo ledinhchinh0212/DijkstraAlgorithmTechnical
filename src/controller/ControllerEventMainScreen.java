@@ -10,6 +10,7 @@ import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
+import model.algorithm.DFSAlgorithmMethod;
 import model.algorithm.DijkstraAlgorithmMethod;
 import model.data.Data;
 import model.invalid.InvalidErrorCheck;
@@ -19,6 +20,7 @@ import view.AboutMeScreen;
 import view.MainScreen;
 import view.MatrixShowFrame;
 import view.RoadMapScreen;
+import view.SettingMainView;
 
 public class ControllerEventMainScreen implements KeyListener, ActionListener{
 	private MainScreen main;
@@ -31,6 +33,8 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 	private MatrixShowFrame mtr;
 	private boolean MaTrix;
 	private boolean activation;
+	private SettingMainView setting;
+	private DFSAlgorithmMethod dfs;
 
 	
 	public boolean isActivation() {
@@ -44,6 +48,7 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 	public ControllerEventMainScreen(MainScreen main) {
 		this.main = main;
 		this.dijkstra = new DijkstraAlgorithmMethod();
+		this.dfs = new DFSAlgorithmMethod();
 		this.checkOn = false;
 		this.aboutMe = new AboutMeScreen();
 		this.roadmap = new RoadMap();
@@ -51,6 +56,7 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 		this.mtr = new MatrixShowFrame(main);
 		this.data = new Data();
 		this.activation = true;
+		this.setting = new SettingMainView(main);
 	}
 	
 	@Override
@@ -81,6 +87,121 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean CheckCHead(String rawData) {
+		int size = rawData.length();
+		for(int i = 0; i < size; i++) {
+			char ch = rawData.charAt(i);
+			if(ch <= 'A' && ch >= 'Z') {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean CheckErrorDoThiHaiPhia(String s) {
+		System.out.println(s + " : s");
+		String copy = "";
+		s += " ";
+		boolean rep = false;
+		for(int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			if(ch == '\n' || i == s.length() - 1) {
+				copy = copy.trim();
+				int count = 0;
+				boolean num = false;
+				rep = false;
+				for(int j = 0; j < copy.length(); j++) {
+					char c = copy.charAt(j);
+					if(c == ' ' && num) {
+	                    count++;
+	                    if(count >= 2) {
+	                        return false;
+	                    }
+	                    num = false;
+	                }
+					else {
+	                    if(j != 0 && s.charAt(j - 1) == ' ') {
+	                        rep = true;
+	                    }
+	                    num = true;
+	                }
+				}
+				if(!rep) {
+	                return false;
+	            }
+				// passed the stage
+	            copy = "";
+			}
+			else {
+	            copy += ch;
+	        }
+		}
+		return true;
+	}
+	
+	public void TruyenMangDoThiHaiPhia(String s, int arr[][]) {
+		String sum = "";
+	    String another = "";
+	    int count = 1;
+	    for(int i = 0; i < s.length(); i++) {
+	        char ch = s.charAt(i);
+	        if(ch != ' ' && ch != '\n') {
+	            if(count == 1) {
+	                sum += ch;
+	            }
+	            else if(count == 2) {
+	                another += ch;
+	            }
+	        }
+	        else {
+	            if(ch == ' ') {
+	                if(count == 1) {
+	                    count = 2;
+	                }
+	            }
+	            if(ch == '\n') {
+	                count = 1;
+	                // tong ket lai
+	                sum = sum.trim();
+	                another = another.trim();
+
+	                int num1 = Integer.parseInt(sum);
+	                int num2 =Integer.parseInt(another);
+	                arr[num1][num2] = arr[num2][num1] = 1;
+	                sum = another = "";
+	                count = 1;
+	            }
+	        }
+	    }
+	}
+	
+	public void DoThiHaiPhia() {
+		String data = this.main.textArea.getText();
+		System.out.println(data + " : data");
+		boolean active = true;
+		boolean cHead = false;
+		String rawData = getDuLieuTho(data);
+		// Kiểm tra có chữ tồn tại không
+		if(!InvalidErrorCheck.getInstance().isAllDigits(rawData)) {
+			active = false;
+		}
+		if(InvalidErrorCheck.getInstance().isAllUpperCase(rawData)) {
+			active = true;
+			cHead = true;
+		}
+		System.out.println(active);
+		if(!CheckErrorDoThiHaiPhia(data) && active) {
+			active = false;
+		}
+		if(active) {
+			int arr[][] = new int[1001][1001];
+			TruyenMangDoThiHaiPhia(data, arr);
+			this.dfs.setArray(arr);
+			
+		}
+		// $*n need
 	}
 	
 	public void ActionRoad() {
@@ -292,8 +413,14 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 	// action
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// working
 		if(e.getSource() == main.buttonActionWorkingMain) {
-			ActionRoad();
+			if(this.setting.dijkstraButton.isSelected()) {
+				ActionRoad();
+			}
+			if(this.setting.biGraphButton.isSelected()) {
+				DoThiHaiPhia();
+			}
 		}
 		if(e.getSource() == main.buttonCLearData) {
 			LoadingDataField();
@@ -312,6 +439,7 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 			}
 			
 		}
+		// restore
 		if(e.getSource() == main.buttonRestoreData) {
 			if(data == null) {
 				main.labelInvalid.setText("Dữ liệu trống");
@@ -372,6 +500,18 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 			}
 			this.MaTrix = !this.MaTrix;
 		}
+		// setting
+		if(e.getSource() == this.main.buttonSettingMain) {
+			if(this.setting.isVisible()) {
+				this.setting.dispose();
+				this.setting.setVisible(false);
+				this.main.buttonSettingMain.setBorder(null);
+			}
+			else {
+				this.setting.setVisible(true);
+				this.main.buttonSettingMain.setBorder(BorderFactory.createLineBorder(Color.decode("#A3FFD6"), 2));
+			}
+		}
 	}
 	public void LoadingDataField() {
 		// luu vao data;
@@ -388,6 +528,12 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 		main.testLabel.setForeground(Color.black);
 		main.testLabel.setOpaque(true);
 		//
+		for(int i = start; i < this.dijkstra.getDinh() + start; i++) {
+			for(int j = start; j < this.dijkstra.getDinh() + start; j++) {
+				System.out.print(graph[i][j] + " ");
+			}
+			System.out.println();
+		}
 		if(start == 0) { 
 			StringBuilder labelText = new StringBuilder("<html><pre>");
 			for(int i = 0; i < this.dijkstra.getDinh(); i++) {
@@ -486,6 +632,8 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 		this.main.labelSourceV.setForeground(Color.decode("#A3FFD6"));
 		this.main.labelTargetV.setForeground(Color.decode("#A3FFD6"));
 		
+		this.main.textFieldCanh.setText("");
+		
 		this.main.buttonActionWorkingMain.setEnabled(false);
 		
 	}
@@ -577,72 +725,6 @@ public class ControllerEventMainScreen implements KeyListener, ActionListener{
 		return true;
 	}
 	
-	// kiểm tra có đồng bộ chữ cái và số không (đồng thời thiết lập) // không cần dùng đến nữa
-	public boolean CheckCHeadError(String duLieu, boolean cHead) {
-		// sau khi thoả mãn điều kiện n x n hình
-		// n x n không chênh lệch số lượng nhau
-		/*
-		 * mục tiêu:
-		 * - xác định cHead (true, false)
-		 * - xác định start
-		 * - truyền vào mảng trong trường hợp cùng kiểu dữ liệu n x n
-		 * */
-//		int cmp = 0;
-//		String sum = "";
-//		boolean check = false;
-//		for(int i = 0; i < duLieu.length(); i++) {
-//			if(duLieu.charAt(i)== ' ' || duLieu.charAt(i) == '\n' || i == duLieu.length() - 1) {
-//				if(!check) {
-//					continue; // continue nếu chưa có ký tự nào cả
-//				}
-//				if(cmp == 0) {
-//					if(InvalidErrorCheck.getInstance().isAllDigits(sum)) {
-//						cmp = 1;
-//					}
-//					else if(InvalidErrorCheck.getInstance().isAllUpperCase(sum)) {
-//						cmp = 2;
-//					}
-//					else {
-//						cmp = -1;
-//						return false;
-//						// error;
-//						// Không phải cả 2 loại trên
-//					}
-//				}
-//				else if(cmp == 1) { // trước đó là chuỗi số
-//					if(InvalidErrorCheck.getInstance().isAllUpperCase(sum)) {
-//						cmp = -1;
-//						return false;
-//					}
-//					if(!InvalidErrorCheck.getInstance().isAllDigits(sum)) {
-//						cmp = -1;
-//						return false;
-//					}
-//				}
-//				else if(cmp == 2) { // trước đó là chữ cái in hoa
-//					if(InvalidErrorCheck.getInstance().isAllDigits(sum)) {
-//						cmp = -1;
-//						return false;
-//					}
-//					if(!InvalidErrorCheck.getInstance().isAllUpperCase(sum)) {
-//						cmp = -1;
-//						return false;
-//					}
-//				}
-//				// Xử lí phần start
-//				sum = ""; // cập nhật lại sum
-//				check = false;
-//			}
-//			else {
-//				sum += duLieu.charAt(i);
-//				check = true;
-//			}
-//		}
-//		// xử lí phần start
-//		
-		return true;
-	}
-
 	// truyền mảng
 	public void truyenMang(int arr[][], String duLieu) {
 		// chỉ cần truyền mảng, đã xác định được start
