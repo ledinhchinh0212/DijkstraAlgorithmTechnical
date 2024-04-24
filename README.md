@@ -1,4 +1,4 @@
-# DijkstraFindMethod
+# DijkstraAlgorithmTechnical
  just a application
  
 # Download Java Development Kit (JDK) lastest version
