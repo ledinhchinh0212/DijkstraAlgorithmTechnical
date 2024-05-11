@@ -85,6 +85,6 @@ public class AboutMeScreen extends JFrame {
                 }
             }
         });
-		contentPane.add(linkGitHub);
+		contentPane.add(linkGitHub);     
 	}
 }
