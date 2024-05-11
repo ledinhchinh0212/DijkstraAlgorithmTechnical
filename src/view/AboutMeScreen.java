@@ -86,29 +86,5 @@ public class AboutMeScreen extends JFrame {
             }
         });
 		contentPane.add(linkGitHub);
-		
-		JLabel YoutbeLabel = new JLabel("Youtube:");
-		YoutbeLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		YoutbeLabel.setBounds(10, 119, 83, 42);
-		contentPane.add(YoutbeLabel);
-		
-		JLabel linkYoutube = new JLabel("<html><a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>chinh.dev.se</a></html>");
-		linkYoutube.setHorizontalAlignment(SwingConstants.LEFT);
-		linkYoutube.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		linkYoutube.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		linkYoutube.setBounds(103, 129, 246, 21);
-		linkYoutube.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().browse(new java.net.URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
-		contentPane.add(linkYoutube);
 	}
 }
